@@ -18,7 +18,7 @@ def kc(data: bytes, key: bytes):
     return bytes(key)
     
 
-decrypted_key = b"" # 게임 메모리에서 가져온 키
+decrypted_key = b""
 iv = bytes.fromhex("A0 47 E9 3D 23 0A 4C 62 A7 44 B1 A4 EE 85 7F BA")
 
 data = open("./project.json", "rb").read()
