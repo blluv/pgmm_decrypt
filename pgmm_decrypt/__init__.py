@@ -1,0 +1,1 @@
+from pgmm_decrypt.pgmm import decrypt_pgmm_key, decrypt_pgmm_resource
