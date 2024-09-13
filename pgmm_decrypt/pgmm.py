@@ -8,8 +8,9 @@ def decrypt_pgmm_key(encrypted_key: bytes):
 
 # TODO: calc weak from key
 def decrypt_pgmm_resource(decrypted_key: bytes | None, data: bytes, weak: bool):
+    pt_len = len(data) - 4 - data[3]
     if weak:
-        return decrypt(data[4:], None, True)
+        return decrypt(data[4:], None, True)[:pt_len]
     else:
-        new_key = derive_key(data[:4], decrypted_key)
-        return decrypt(data[4:], new_key, False)
+        new_key = derive_key(data, decrypted_key)
+        return decrypt(data[4:], new_key, False)[:pt_len]
