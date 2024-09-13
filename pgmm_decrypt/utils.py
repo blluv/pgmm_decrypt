@@ -1,9 +1,5 @@
-import struct
-from typing import List
-
-
-def xor_block(a, b):
-    return bytes(map(lambda v: v[0] ^ v[1], zip(a, b)))
+def xor_block(a: bytes, b: bytes) -> bytes:
+    return bytes(va ^ vb for va, vb in zip(a, b))
 
 
 def cbc_process(iv, data, dec_func, block_size=16):
@@ -29,20 +25,9 @@ def derive_key(data: bytes, key: bytes):
     return bytes(key)
 
 
-def rotr32(x, n):
-    return (x >> n) | ((x << (32 - n)) & 0xFFFFFFFF)
+def rol_nbytes(bs: bytes, n: int) -> bytes:
+    return bs[n:] + bs[:n]
 
 
-def rotl32(x, n):
-    return ((x << n) & 0xFFFFFFFF) | (x >> (32 - n))
-
-
-def bytesToWords(data: bytes) -> List[int]:
-    assert len(data) % 4 == 0
-
-    words_len = len(data) // 4
-    return list(struct.unpack(f"<{words_len}I", data))
-
-
-def wordsToBytes(words: List[int]) -> bytes:
-    return bytes(struct.pack(f"<{len(words)}I", *words))
+def ror_nbytes(bs: bytes, n: int) -> bytes:
+    return bs[-n:] + bs[:-n]

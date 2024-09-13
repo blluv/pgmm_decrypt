@@ -1,23 +1,15 @@
-from typing import List
-
-from pgmm_decrypt.utils import rotl32, rotr32
+from pgmm_decrypt.utils import rol_nbytes, ror_nbytes
 
 
-def weak_twofish_block_decrypt(words: List[int]):
+def weak_twofish_block_decrypt(block: bytes) -> bytes:
     """
     Python code to simulate a strange key schedule.
     In PGMM, if you try to use a key that is less than the key size of twofish, the key schedule will not work properly.
     """
 
-    assert len(words) == 4  # 16bytes
+    assert len(block) == 16 # 16bytes
 
-    for _ in range(8):
-        words[2] = rotl32(words[2], 1) & 0xFFFFFFFF
-        words[3] = rotr32(words[3] & 0xFFFFFFFF, 1)
-        words[0] = rotl32(words[0], 1) & 0xFFFFFFFF
-        words[1] = rotr32(words[1] & 0xFFFFFFFF, 1)
+    block = ror_nbytes(block[:4], 1) + rol_nbytes(block[4:8], 1) + ror_nbytes(block[8:12], 1) + rol_nbytes(block[12:], 1)
+    block = ror_nbytes(block, 8)
 
-    [words[0], words[2]] = [words[2], words[0]]
-    [words[1], words[3]] = [words[3], words[1]]
-
-    return words
+    return block
