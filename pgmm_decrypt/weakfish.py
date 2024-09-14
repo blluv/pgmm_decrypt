@@ -1,4 +1,4 @@
-from pgmm_decrypt.utils import rol_nbytes, ror_nbytes
+from .utils import rol_nbytes, ror_nbytes
 
 
 class Weakfish():
