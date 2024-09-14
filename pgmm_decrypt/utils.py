@@ -2,27 +2,23 @@ def xor_block(a: bytes, b: bytes) -> bytes:
     return bytes(va ^ vb for va, vb in zip(a, b))
 
 
-def cbc_process(iv, data, dec_func, block_size=16):
-    assert len(data) % block_size == 0
+def cbc_decrypt_wrapper(block_decrypt_func, iv):
+    last_ciphertext_block = iv
 
-    last_block = iv
-    for i in range(0, len(data), block_size):
-        ct = data[i : i + block_size]
-        pt = xor_block(dec_func(ct), last_block)
-        last_block = ct
-        yield pt
+    def decrypt_one_block(ciphertext_block):
+        nonlocal last_ciphertext_block
+        plaintext_block = xor_block(block_decrypt_func(ciphertext_block), last_ciphertext_block)
+        last_ciphertext_block = ciphertext_block
+        return plaintext_block
+
+    return decrypt_one_block
 
 
-def derive_key(data: bytes, key: bytes):
-    key = list(key)
-    i = 0
-    h = len(data) - data[3] - 4
-    while h > 0:
-        t = (h ^ key[i]) & 0xFF
-        key[i] = 1 if t < 1 else t
-        h //= 256
-        i += 1
-    return bytes(key)
+def derive_subkey(key: bytes, plaintext_len: int) -> bytes:
+    ptl_bytes = plaintext_len.to_bytes(8, 'little').rstrip(b'\0')   # 8 bytes for length value should be enough
+    xor_key = xor_block(ptl_bytes, key).replace(b'\0', b'\1')   # this stops at the end of the shorter one
+
+    return xor_key + key[len(xor_key):] # append the rest unchanged bytes, assume `key` is alwalys longer
 
 
 def rol_nbytes(bs: bytes, n: int) -> bytes:

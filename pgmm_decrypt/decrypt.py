@@ -1,21 +1,18 @@
 from twofish import Twofish
 
-from pgmm_decrypt.utils import cbc_process
-from pgmm_decrypt.weak_twofish import weak_twofish_block_decrypt
+from pgmm_decrypt.utils import cbc_decrypt_wrapper
+from pgmm_decrypt.weak_twofish import Weakfish
 
 IV = bytes.fromhex("A047E93D230A4C62A744B1A4EE857FBA")
 
 # TODO: calc weak from key
 def decrypt(data: bytes, key: bytes | None, weak: bool):
-    if weak:
+    assert len(data) % 16 == 0
 
-        def block_dec(block):
-            return weak_twofish_block_decrypt(block)
+    cipher = Weakfish() if weak else Twofish(key)
+    block_dec_with_cbc = cbc_decrypt_wrapper(cipher.decrypt, IV)
 
-    else:
-        twofish = Twofish(key)
-
-        def block_dec(block):
-            return twofish.decrypt(block)
-
-    return b"".join(cbc_process(IV, data, block_dec))
+    return b"".join(
+        block_dec_with_cbc(data[offset : offset + 16])
+            for offset in range(0, len(data), 16)
+        )

@@ -1,5 +1,5 @@
 from pgmm_decrypt.decrypt import decrypt
-from pgmm_decrypt.utils import derive_key
+from pgmm_decrypt.utils import derive_subkey
 
 
 def decrypt_pgmm_key(encrypted_key: bytes):
@@ -12,5 +12,5 @@ def decrypt_pgmm_resource(decrypted_key: bytes | None, data: bytes, weak: bool):
     if weak:
         return decrypt(data[4:], None, True)[:pt_len]
     else:
-        new_key = derive_key(data, decrypted_key)
+        new_key = derive_subkey(decrypted_key, pt_len)
         return decrypt(data[4:], new_key, False)[:pt_len]
