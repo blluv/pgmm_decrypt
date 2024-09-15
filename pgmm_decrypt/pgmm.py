@@ -14,7 +14,7 @@ def decrypt_pgmm_key(encrypted_key: bytes) -> bytes:
 
 
 # TODO: calc weak from key
-def decrypt_pgmm_resource(file_bytes: bytes, decrypted_key: bytes | None = None, *, weak: bool = False):
+def decrypt_pgmm_resource(file_bytes: bytes, decrypted_key: bytes | None = None, *, weak: bool = False) -> bytes:
     if not file_bytes[:3] == b"enc":    # resource file is not encrypted
         return file_bytes
 
