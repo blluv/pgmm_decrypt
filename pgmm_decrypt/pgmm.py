@@ -1,5 +1,4 @@
-from twofish import Twofish
-
+from .twofish import Twofish
 from .decrypt import cbc_decrypt_wrapper, decrypt, derive_subkey
 from .weakfish import Weakfish
 
