@@ -32,9 +32,7 @@ with open("decrypted_resource_file", "wb") as f:
 ```
 
 ## weak?
-
 In PGMM, if you try to use a key that is less than the key size of twofish, the key schedule will not work properly.
 
-I'm going to implement a way to check the length in the library and check weak automatically.
-
-Increasing the key length in info.json and debugging it to see if it decrypt correctly, to figure out what length PGMM's weird key schedule works at.
+## twofish
+from [twofish](https://packages.debian.org/source/buster/twofish)
