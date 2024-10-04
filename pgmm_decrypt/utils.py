@@ -8,3 +8,7 @@ def rol_nbytes(bs: bytes, n: int) -> bytes:
 
 def ror_nbytes(bs: bytes, n: int) -> bytes:
     return bs[-n:] + bs[:-n]
+
+
+def pad(block: bytes, block_size: int) -> bytes:
+    return block + b"\0" * ((-len(block)) % block_size)
