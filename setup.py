@@ -8,7 +8,7 @@ twofish = Extension(
 
 setup(
     name="pgmm_decrypt",
-    version="0.1.0",
+    version="0.2.0",
     packages=find_packages(include=["pgmm_decrypt"]),
     ext_modules=[twofish],
 )
