@@ -2,7 +2,7 @@ def prepare_key(key: bytes):
     """
     Prepare the Twofish key.
 
-    Key Mmst be between 1 and 32 bytes.
+    Key must be between 0 and 32 bytes.
     """
     ...
 
