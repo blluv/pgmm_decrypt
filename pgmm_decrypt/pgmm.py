@@ -1,7 +1,6 @@
-from .twofish import Twofish
 from .decrypt import cbc_decrypt_wrapper, decrypt, derive_subkey
+from .twofish import Twofish
 from .weakfish import Weakfish
-from .utils import pad
 
 PGMM_IV = bytes.fromhex("A047E93D230A4C62A744B1A4EE857FBA")
 
@@ -23,10 +22,6 @@ def decrypt_pgmm_resource(
         return file_bytes
 
     is_weakfish = decrypted_key is None or len(decrypted_key) <= 8
-
-    if not decrypted_key is None:
-        decrypted_key = pad(decrypted_key)
-
     pt_len = len(file_bytes) - 4 - file_bytes[3]
 
     cipher = (

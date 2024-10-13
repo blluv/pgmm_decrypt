@@ -1,13 +1,16 @@
 from typing import Callable, Generator
 
-from .utils import xor_block
+from .utils import pad, xor_block
 
 
 def derive_subkey(key: bytes, plaintext_len: int) -> bytes:
+    if len(key) < 8:    # make sure `key` is long enough
+        key = pad(key, 8)
+
     ptl_bytes = plaintext_len.to_bytes(8, "little").rstrip(b"\0")   # 8 bytes for length value should be enough
     xor_key = xor_block(ptl_bytes, key).replace(b"\0", b"\1")   # this stops at the end of the shorter one
 
-    return xor_key + key[len(xor_key):] # append the rest unchanged bytes, assume `key` is alwalys longer
+    return xor_key + key[len(xor_key):] # append the rest unchanged bytes
 
 
 def cbc_decrypt_wrapper(block_decrypt_func: Callable[[bytes], bytes], iv: bytes) -> Callable[[bytes], bytes]:
